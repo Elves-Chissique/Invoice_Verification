@@ -13,69 +13,67 @@
       background: linear-gradient(135deg, #1a73e8, #4facfe);
       min-height: 100vh;
       display: flex;
-      position: relative;
       justify-content: center;
       align-items: center;
-      padding: 20px;
+      padding: 15px;
       color: #333;
     }
 
     .container {
       background: #fff;
       border-radius: 20px;
-      max-width: 450px;
+      max-width: 480px;
       width: 100%;
-      padding: 30px 25px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      padding: 25px 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
       text-align: center;
-      position: relative;
     }
 
     .logo {
-      width: 100px;
-      top: 10px;
-      left: 10px;
-      position: absolute;
-    }
-
-    .profile-section{
-      background-color: rgb(131, 4, 4);
-      display: flex;
-      position: relative;
-      align-items: center;
-      gap: 3em;
-      padding-left: 0.5rem;
-      padding-top: 1rem;
-      border-radius: 15px;
-      color: #fff;
-
-    }
-
-    .email{
-      position: absolute;
-      left: 39%;
-      top: 75%;
-      font-size: 13px;
-    }
-
-    .profile-img {
-      width: 130px;
-      height: 130px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 4px solid #fff;
-      margin-bottom: 20px;
-    }
-
-    h1 {
-      font-size: 1.8rem;
-      color: #1a73e8;
+      width: 80px;
       margin-bottom: 15px;
     }
 
+    .profile-section {
+      background-color: rgb(131, 4, 4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8em;
+      padding: 1rem;
+      border-radius: 15px;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    .profile-img {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #fff;
+    }
+
+    .name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .email {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      color: #1a73e8;
+      margin-bottom: 12px;
+    }
+
     p {
-      font-size: 1rem;
-      line-height: 1.6;
+      font-size: 0.95rem;
+      line-height: 1.5;
       margin-bottom: 12px;
     }
 
@@ -92,18 +90,16 @@
       background-color: #f4f4f9;
       border-left: 5px solid #1a73e8;
       border-radius: 10px;
-      padding: 20px;
-      margin: 20px 0;
-      font-size: 1rem;
-      line-height: 1.6;
-      color: #333;
+      padding: 15px;
+      margin: 15px 0;
+      font-size: 0.95rem;
       text-align: left;
     }
 
     .cta-button {
       display: inline-block;
-      margin-top: 20px;
-      padding: 12px 25px;
+      margin-top: 15px;
+      padding: 12px 20px;
       background: rgb(131, 4, 4);
       color: #fff;
       font-weight: 700;
@@ -113,26 +109,39 @@
     }
 
     .cta-button:hover {
-      background: #155ab6;
+      background: #b71c1c;
     }
 
+    /* Larger screens */
     @media(min-width: 600px){
-      h1 { font-size: 2.2rem; }
-      p { font-size: 1.1rem; }
+      .profile-section {
+        flex-direction: row;
+        justify-content: flex-start;
+        text-align: left;
+      }
+      .name, .email {
+        text-align: left;
+      }
+      .profile-img {
+        margin-bottom: 0;
+      }
+      h1 { font-size: 2rem; }
+      p { font-size: 1rem; }
     }
   </style>
 </head>
 <body>
+  <div class="container">
     <!-- Company Logo -->
     <img src="FundoPreto.png" alt="Sky_Tech Moz Logo" class="logo">
 
-
-  <div class="container">
     <div class="profile-section">
       <!-- CEO Profile Photo -->
       <img src="Transp-Perfil.png" alt="Elves Domingos Chissique" class="profile-img">
-      <span class="name">Elves Chissique <br> Sky_Tech Moz CEO</span>
-      <span class="email">elves.chissique@skytechmoz.com</span>
+      <div>
+        <div class="name">Elves Chissique<br>CEO - Sky_Tech Moz</div>
+        <div class="email">elves.chissique@skytechmoz.com</div>
+      </div>
     </div>
 
     <h1>Invoice Verification</h1>
@@ -140,13 +149,12 @@
     <!-- Dynamic Invoice Info -->
     <p class="invoice-info">Invoice No: <span id="invoiceNumber">#0125</span></p>
   
-
     <!-- Confirmation Message -->
-    <div class="confirmation-box">
+    <div class="confirmation-box" id="confirmationMessage">
       <p>
-        <strong>On behalf of Sky_Tech Moz</strong>, I hereby confirm that the transaction pertaining to 
-        purchesing of <strong>1 x smart-tablet</strong> and invoice no. <strong>#0125</strong> is authentic and officially recognized
-        by our company, reflecting our commitment to integrity, security, and corporate excellence.
+        On behalf of <strong>Sky_Tech Moz</strong>, I hereby confirm that the transaction pertaining to 
+        purchasing of <strong id="itemName">1 x Smart Tablet</strong> and invoice no. 
+        <strong id="invoiceNoConfirm">#0125</strong> is authentic and officially recognized.
       </p>
     </div>
 
@@ -158,15 +166,11 @@
     // Get invoice and item from URL: ?invoice=1234&item=Smart+Tablet
     const urlParams = new URLSearchParams(window.location.search);
     const invoice = urlParams.get('invoice') || '#0125';
-    const item = urlParams.get('item') || 'XXX';
+    const item = urlParams.get('item') || '1 x Smart Tablet';
 
     document.getElementById('invoiceNumber').textContent = invoice;
+    document.getElementById('invoiceNoConfirm').textContent = invoice;
     document.getElementById('itemName').textContent = item;
-
-    // Replace placeholders in confirmation box
-    document.querySelector('.confirmation-box p').innerHTML = document.querySelector('.confirmation-box p').innerHTML
-      .replace('#0125', item)
-      .replace('#0125', invoice);
   </script>
 </body>
 </html>
